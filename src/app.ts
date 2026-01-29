@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.config';
 import { testConnection } from './config/db.config';
+import routes from './routes/index.route';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -19,7 +20,21 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'API Documentation',
+  swaggerOptions: {
+    persistAuthorization: false,
+  },
 }));
+
+// Disable cache cho Swagger
+app.use((req, res, next) => {
+  if (req.url.includes('/api-docs')) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
+  }
+  next();
+});
 
 // Swagger JSON endpoint
 app.get('/api-docs.json', (req: Request, res: Response) => {
@@ -27,6 +42,8 @@ app.get('/api-docs.json', (req: Request, res: Response) => {
   res.send(swaggerSpec);
 });
 
+// API Routes
+app.use('/api', routes);
 
 // Start server
 const startServer = async () => {
