@@ -1,6 +1,11 @@
 import express, { Express, Request, Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.config';
+import { testConnection } from './config/db.config';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -67,9 +72,21 @@ app.get('/api/health', (req: Request, res: Response) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📚 API Documentation available at http://localhost:${PORT}/api-docs`);
-});
+const startServer = async () => {
+  try {
+    // Test database connection
+    await testConnection();
+    
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      console.log(`📚 API Documentation available at http://localhost:${PORT}/api-docs`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app;
