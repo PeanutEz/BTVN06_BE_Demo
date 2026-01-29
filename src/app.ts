@@ -27,49 +27,6 @@ app.get('/api-docs.json', (req: Request, res: Response) => {
   res.send(swaggerSpec);
 });
 
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Welcome endpoint
- *     description: Returns a welcome message
- *     tags: [General]
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/SuccessResponse'
- */
-app.get('/', (req: Request, res: Response) => {
-  res.json({
-    message: 'Welcome to Express TypeScript API!',
-    status: 'success'
-  });
-});
-
-/**
- * @swagger
- * /api/health:
- *   get:
- *     summary: Health check endpoint
- *     description: Check if the API is running and healthy
- *     tags: [Health]
- *     responses:
- *       200:
- *         description: API is healthy
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/HealthResponse'
- */
-app.get('/api/health', (req: Request, res: Response) => {
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString()
-  });
-});
 
 // Start server
 const startServer = async () => {

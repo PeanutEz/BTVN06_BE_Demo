@@ -1,10 +1,8 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
-// Load environment variables
 dotenv.config();
 
-// Database configuration
 const dbConfig = {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '3306'),
@@ -16,10 +14,8 @@ const dbConfig = {
     queueLimit: 0
 };
 
-// Create connection pool
 const pool = mysql.createPool(dbConfig);
 
-// Test connection
 export const testConnection = async (): Promise<void> => {
     try {
         const connection = await pool.getConnection();
@@ -31,5 +27,4 @@ export const testConnection = async (): Promise<void> => {
     }
 };
 
-// Export pool for use in other files
 export default pool;
